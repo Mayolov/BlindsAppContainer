@@ -7,8 +7,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // import moment from 'moment';
 import { NetworkInfo } from "react-native-network-info";
  
-
-
 let isOpen = true;
 let hourOpen;
 let minOpen;
@@ -24,7 +22,8 @@ let TimeInputClose;
 // const ipAddress = NativeModules.IpAddressModule.getIpAddress();
 // let myIpAddress = ipAddress;
 // const ipAddress = NetworkInfo.getIPAddress();
-const baseURI = 'http://10.0.0.181:80';
+// Get IPv4 IP (priority: WiFi first, cellular second)
+const baseURI = 'http://'+ '10.0.0.181'+':80';
 
 async function sendCommand(command) {
   try {
@@ -36,7 +35,7 @@ async function sendCommand(command) {
   }
 }
 
-async function closeTime(time) {
+async function closeTime(blindsCloseTime) {
   try {
     let response = await fetch(`${baseURI}/closeTime`, {
       method: 'POST',
@@ -44,7 +43,7 @@ async function closeTime(time) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        time: time,
+        blindsCloseTime: blindsCloseTime,
       }),
     });
     let responseJson = await response.json();
@@ -54,7 +53,7 @@ async function closeTime(time) {
   }
 }
 
-async function openTime(time) {
+async function openTime(blindsOpenTime) {
   try {
     let response = await fetch(`${baseURI}/openTime`, {
       method: 'POST',
@@ -62,7 +61,7 @@ async function openTime(time) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        time: time,
+        blindsOpenTime: blindsOpenTime,
       }),
     });
     let responseJson = await response.json();
@@ -104,9 +103,11 @@ export default function App() {
     <SafeAreaView style = {styles.button}>
     <Button
         title="Instructions to Connect Device to WiFi"
-        onPress={() => Alert.alert("To connect this device to WiFi, please turn it on if not on already",
-        "Then find it under 'GYAT-DAMN' and enter the password, 1234567890, you'll then be prompted to connect to your local Wifi", [
-        {text:"OK", onPress:()=> {console.log("set to true")}}])}/>
+        onPress={() => // Get Local IP
+// Get Local IP
+NetworkInfo.getIPAddress().then(ipAddress => {
+  console.log(JSON.stringify(ipAddress));
+})}/>
       </SafeAreaView>
 
     <SafeAreaView style = {styles.button}>
