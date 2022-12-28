@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useRef, useState} from 'react';
-import {StyleSheet,Linking , Platform, Text, TouchableHighlight, Alert, View, Image, SafeAreaView, Button} from 'react-native';
+import {StyleSheet,Modal,Linking ,TextInput, Platform, Text, TouchableHighlight, Alert, View, Image, SafeAreaView, Button} from 'react-native';
 import { useDimensions, useDeviceOrientation } from '@react-native-community/hooks';
-import WelcomScreen from './app/screens/WelcomScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 // import moment from 'moment';
@@ -12,12 +11,15 @@ let hourOpen;
 let minOpen;
 let TimeInputOpen;
 let hourClose;
-let letHourClose;
+let minClose;
 let TimeInputClose;
+
+
 
 const openSettings = () => {
   Linking.openSettings();
 };
+
 const blindsOpen = () => {
   if(isOpen == false){
     isOpen = true;
@@ -40,7 +42,29 @@ const blindsClose = () => {
     console.log("They are already closed")
   }
 };
+function sendWiFiCredentials(ssid, password) {
+  const data = {
+    ssid: ssid,
+    password: password
+  };
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', 'http://192.168.4.1/connect_to_wifi', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      console.log('Success:', xhr.responseText);
+    } else {
+      console.error('Error:', xhr.statusText);
+    }
+  };
+  xhr.send(JSON.stringify(data));
+}
 export default function App() {
+  const [showModal, setShowModal] = useState(false);
+  const [ssid, setSsid] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <SafeAreaView style={[styles.container,containerStyle]}>
     <SafeAreaView style = {styles.mainImage}>
@@ -48,18 +72,39 @@ export default function App() {
 
     </SafeAreaView>
     <SafeAreaView style = {styles.button}>
-      <Button 
-        title="Connect to device" 
-        color={"dodgerblue"}
-        styles={styles.button}
-        onPress={()=> 
-        Alert.alert("forward to wifi settings", "", [
-        {text:"yes", onPress: ()=> {openSettings(), console.log("wifi settings")}},
-        {text:"no", onPress: ()=> console.log("back to screen")} ])}></Button>
+
+    <Button
+        title="Connect to WiFi"
+        onPress={() => setShowModal(true)}
+      />
+      <Modal visible={showModal}>
+      <View style= {{paddingTop:330}}>
+      <Text style={{ paddingLeft:20,paddingBottom:30 }}>Before Inputting credentials Please make sure youre Connected to the device</Text>
+
+      <Text style={{ alignSelf: 'center'}}>Input Credentials Here</Text>
+        <TextInput
+          placeholder="WiFi SSID"
+          value={ssid}
+          onChangeText={setSsid}
+        />
+        <TextInput
+          placeholder="WiFi Password"
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Button
+          title="Connect"
+          onPress={() => {
+            sendWiFiCredentials(ssid, password);
+            setShowModal(false);
+          }}/>
+        </View>
+
+      </Modal>
+      
       </SafeAreaView>
 
     <SafeAreaView style = {styles.button}>
-      
       <Button 
         title='Press to open'
         color={'darkgreen'}
@@ -106,6 +151,7 @@ export default function App() {
 }
 
 const containerStyle = {backgroundColor: "black"}
+
 const styles = StyleSheet.create({
   container: {
     display: 'flex',    
