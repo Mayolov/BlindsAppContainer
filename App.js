@@ -1,11 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useRef, useState} from 'react';
-import {StyleSheet,NativeModules,Modal,Linking ,TextInput, Platform, Text, TouchableHighlight, Alert, View, Image, SafeAreaView, Button} from 'react-native';
+import {StyleSheet,Modal ,TextInput, Platform, Text, TouchableHighlight, Alert, View, Image, SafeAreaView, Button} from 'react-native';
 import { useDimensions, useDeviceOrientation } from '@react-native-community/hooks';
 import { NavigationContainer } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import moment from 'moment';
-import { NetworkInfo } from "react-native-network-info";
  
 let isOpen = true;
 let hourOpen;
@@ -23,7 +21,10 @@ let TimeInputClose;
 // let myIpAddress = ipAddress;
 // const ipAddress = NetworkInfo.getIPAddress();
 // Get IPv4 IP (priority: WiFi first, cellular second)
-const baseURI = 'http://'+ '10.0.0.181'+':80';
+//Home IP
+//const baseURI = 'http://'+ '10.0.0.181'+':80';
+// 7leaves IP 
+const baseURI = 'http://'+ '192.168.7.158'+':80';
 
 async function sendCommand(command) {
   try {
@@ -94,22 +95,41 @@ const blindsClose = () => {
 };
 
 export default function App() {
+  const [showModal, setShowModal] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
   return (
   <SafeAreaView style={[styles.container,containerStyle]}>
     <SafeAreaView style = {styles.mainImage}>
     <Image source={require("./app/assets/favicon.png")}></Image>
-
+    </SafeAreaView>
+    <SafeAreaView>
+    <Modal 
+        styles = {styles.modal}  
+        visible={showModal}
+        animationType="slide">
+      <TextInput
+        selectionColor="#f00"
+        styles={styles.input}
+        onChangeText={text => setInputValue(text)}
+        value={inputValue}/>
+      <Button
+        style={styles.button}
+        onPress={() => setShowModal(false)}
+        title="Close Modal"/>
+        
+    </Modal>
     </SafeAreaView>
     <SafeAreaView style = {styles.button}>
-    <Button
-        title="Instructions to Connect Device to WiFi"
-        onPress={() => // Get Local IP
-// Get Local IP
-NetworkInfo.getIPAddress().then(ipAddress => {
-  console.log(JSON.stringify(ipAddress));
-})}/>
+      <Button
+          title="Instructions to Connect Device to WiFi"
+          onPress={() => Alert.alert("Connect to the device wifi, the name should be 'GYAT-DAMN' then when you'll \
+          be prompted to add your local networks password.","After thats done, please click input IP, and press press the button for the display to show the IP for your system and input all characters.", [
+          {text:"input IP", onPress:()=>  setShowModal(true)},
+          {text:"Cancel", onPress: ()=> console.log("set to false")}]) }/>
+      
       </SafeAreaView>
-
+    
     <SafeAreaView style = {styles.button}>
       <Button 
         title='Press to open'
@@ -136,7 +156,7 @@ NetworkInfo.getIPAddress().then(ipAddress => {
         color={'darkgreen'}
         onPress={()=>
         Alert.alert("Add when to close blinds","Expected input should be [0-23:0-59] \
-        \nExample input 7:5 for 7:09 am ", [
+        \nExample input 7:9 for 7:09 am ", [
         {text:"TimeInputClose", onPress:()=> console.log("send json information to be parsed")},
         {text:"Cancel", onPress: ()=> console.log("cancel")}])}></Button>
     </SafeAreaView>
@@ -181,4 +201,16 @@ const styles = StyleSheet.create({
     top: "30%",
     left: "50%",
   },
+  input: {
+    width: '80%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    padding: 10,
+  },
+  buttonModal: {
+    alignSelf: 'center',
+  },
+
 });
+
