@@ -1,10 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useRef, useState} from 'react';
-import {StyleSheet,Modal,Linking ,TextInput, Platform, Text, TouchableHighlight, Alert, View, Image, SafeAreaView, Button} from 'react-native';
+import {StyleSheet,NativeModules,Modal,Linking ,TextInput, Platform, Text, TouchableHighlight, Alert, View, Image, SafeAreaView, Button} from 'react-native';
 import { useDimensions, useDeviceOrientation } from '@react-native-community/hooks';
 import { NavigationContainer } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 // import moment from 'moment';
+import { NetworkInfo } from "react-native-network-info";
+ 
+
 
 let isOpen = true;
 let hourOpen;
@@ -14,17 +17,65 @@ let hourClose;
 let minClose;
 let TimeInputClose;
 
+// Get Local IP
+// NetworkInfo.getIPAddress().then(ipAddress => {
+//   console.log(ipAddress);
+// });
+// const ipAddress = NativeModules.IpAddressModule.getIpAddress();
+// let myIpAddress = ipAddress;
+// const ipAddress = NetworkInfo.getIPAddress();
+const baseURI = 'http://10.0.0.181:80';
 
+async function sendCommand(command) {
+  try {
+    let response = await fetch(`${baseURI}/${command}`);
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-const openSettings = () => {
-  Linking.openSettings();
-};
+async function closeTime(time) {
+  try {
+    let response = await fetch(`${baseURI}/closeTime`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        time: time,
+      }),
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function openTime(time) {
+  try {
+    let response = await fetch(`${baseURI}/openTime`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        time: time,
+      }),
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 const blindsOpen = () => {
   if(isOpen == false){
     isOpen = true;
     console.log(isOpen)
-
     // Then activate the function to send the json/bits to open the blinds
   }
   else{
@@ -42,66 +93,20 @@ const blindsClose = () => {
     console.log("They are already closed")
   }
 };
-function sendWiFiCredentials(ssid, password) {
-  const data = {
-    ssid: ssid,
-    password: password
-  };
 
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://192.168.4.1/connect_to_wifi', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      console.log('Success:', xhr.responseText);
-    } else {
-      console.error('Error:', xhr.statusText);
-    }
-  };
-  xhr.send(JSON.stringify(data));
-}
 export default function App() {
-  const [showModal, setShowModal] = useState(false);
-  const [ssid, setSsid] = useState('');
-  const [password, setPassword] = useState('');
-
   return (
-    <SafeAreaView style={[styles.container,containerStyle]}>
+  <SafeAreaView style={[styles.container,containerStyle]}>
     <SafeAreaView style = {styles.mainImage}>
     <Image source={require("./app/assets/favicon.png")}></Image>
 
     </SafeAreaView>
     <SafeAreaView style = {styles.button}>
-
     <Button
-        title="Connect to WiFi"
-        onPress={() => setShowModal(true)}
-      />
-      <Modal visible={showModal}>
-      <View style= {{paddingTop:330}}>
-      <Text style={{ paddingLeft:20,paddingBottom:30 }}>Before Inputting credentials Please make sure youre Connected to the device</Text>
-
-      <Text style={{ alignSelf: 'center'}}>Input Credentials Here</Text>
-        <TextInput
-          placeholder="WiFi SSID"
-          value={ssid}
-          onChangeText={setSsid}
-        />
-        <TextInput
-          placeholder="WiFi Password"
-          value={password}
-          onChangeText={setPassword}
-        />
-        <Button
-          title="Connect"
-          onPress={() => {
-            sendWiFiCredentials(ssid, password);
-            setShowModal(false);
-          }}/>
-        </View>
-
-      </Modal>
-      
+        title="Instructions to Connect Device to WiFi"
+        onPress={() => Alert.alert("To connect this device to WiFi, please turn it on if not on already",
+        "Then find it under 'GYAT-DAMN' and enter the password, 1234567890, you'll then be prompted to connect to your local Wifi", [
+        {text:"OK", onPress:()=> {console.log("set to true")}}])}/>
       </SafeAreaView>
 
     <SafeAreaView style = {styles.button}>
@@ -139,14 +144,16 @@ export default function App() {
       <Button 
         title='Add Time Open'
         color={'darkgreen'}
-        onPress={()=>
-        Alert.alert("Add when to Open blinds","Expected input should be [0-23:0-59] \
-        \nExample input 13:30 for 1:30 pm ", [
-        {text:"TimeInputClose", onPress:()=> console.log("set to true")},
-        {text:"Cancel", onPress: ()=> console.log("Cancel")}])}></Button>
+        onPress={()=> openTime('11:11')
+        // Alert.alert("Add when to Open blinds","Expected input should be [0-23:0-59] \
+        // \nExample input 13:30 for 1:30 pm ", [
+        // {text:"TimeInputClose", onPress:()=> console.log("set to true")},
+        // {text:"Cancel", onPress: ()=> console.log("Cancel")}])
+    
+        }></Button>
     </SafeAreaView>
     
-    </SafeAreaView>
+  </SafeAreaView>
   );
 }
 
