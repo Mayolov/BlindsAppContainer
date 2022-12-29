@@ -26,9 +26,17 @@ let TimeInputClose;
 // 7leaves IP 
 const baseURI = 'http://'+ '192.168.7.158'+':80';
 
-async function sendCommand(command) {
+async function controlBlinds(command) {
   try {
-    let response = await fetch(`${baseURI}/${command}`);
+    let response = await fetch(`${baseURI}/controlBlinds`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        command: command,
+      }),
+    });
     let responseJson = await response.json();
     return responseJson;
   } catch (error) {
@@ -36,7 +44,7 @@ async function sendCommand(command) {
   }
 }
 
-async function closeTime(blindsCloseTime) {
+async function closeTime(blindsShutTime) {
   try {
     let response = await fetch(`${baseURI}/closeTime`, {
       method: 'POST',
@@ -44,7 +52,7 @@ async function closeTime(blindsCloseTime) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        blindsCloseTime: blindsCloseTime,
+        blindsShutTime: blindsShutTime,
       }),
     });
     let responseJson = await response.json();
@@ -71,28 +79,6 @@ async function openTime(blindsOpenTime) {
     console.error(error);
   }
 }
-
-const blindsOpen = () => {
-  if(isOpen == false){
-    isOpen = true;
-    console.log(isOpen)
-    // Then activate the function to send the json/bits to open the blinds
-  }
-  else{
-    console.log("They are already open")
-  }
-};
-
-const blindsClose = () => {
-  if(isOpen == true){
-    isOpen = false;
-    console.log(isOpen)
-    // Then activate the function to send the json/bits to close the blinds
-  }
-  else{
-    console.log("They are already closed")
-  }
-};
 
 export default function App() {
   const [showModal, setShowModal] = useState(false);
@@ -134,38 +120,28 @@ export default function App() {
       <Button 
         title='Press to open'
         color={'darkgreen'}
-        onPress={()=>
-        Alert.alert("Do you want to see the light?","", [
-        {text:"yes", onPress:()=> {blindsOpen(),console.log("set to true")}},
-        {text:"no", onPress: ()=> console.log("set to false")}])}></Button>
+        onPress={()=> controlBlinds('openBlinds')}></Button>
     </SafeAreaView>
 
     <SafeAreaView style = {styles.button}>
       <Button 
         title='Press to Close'
         color={'darkgreen'}
-        onPress={()=>
-        Alert.alert("Go back into the darkness?","", [
-        {text:"yes", onPress:()=> {blindsClose(),console.log("set to false")}},
-        {text:"no", onPress: ()=> console.log("set to true")}])}></Button>
+        onPress={()=> controlBlinds('closeBlinds')}></Button>
     </SafeAreaView>
 
     <SafeAreaView style = {styles.button}>
       <Button 
         title='Add Time Close'
         color={'darkgreen'}
-        onPress={()=>
-        Alert.alert("Add when to close blinds","Expected input should be [0-23:0-59] \
-        \nExample input 7:9 for 7:09 am ", [
-        {text:"TimeInputClose", onPress:()=> console.log("send json information to be parsed")},
-        {text:"Cancel", onPress: ()=> console.log("cancel")}])}></Button>
+        onPress={()=> closeTime('13:31')}></Button>
     </SafeAreaView>
 
     <SafeAreaView style = {styles.button}>
       <Button 
         title='Add Time Open'
         color={'darkgreen'}
-        onPress={()=> openTime('11:11')
+        onPress={()=> openTime('1:1')
         // Alert.alert("Add when to Open blinds","Expected input should be [0-23:0-59] \
         // \nExample input 13:30 for 1:30 pm ", [
         // {text:"TimeInputClose", onPress:()=> console.log("set to true")},
