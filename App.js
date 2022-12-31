@@ -1,12 +1,11 @@
 import React,{useRef, useState} from 'react';
-import {StyleSheet ,TextInput, Text, TouchableHighlight, Alert, View, Image, SafeAreaView, Button} from 'react-native';
- 
+import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button} from 'react-native';
+
+//have phone look through different packets
 //Home IP
 // const baseURI = 'http://'+ '10.0.0.181'+':80';
 // 7leaves IP 
 // const baseURI = 'http://'+ '192.168.7.158'+':80';
-
-
 
 export default function App() {
 
@@ -106,6 +105,24 @@ export default function App() {
           blindsOpenTime: blindsOpenTime,
         }),
       });
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function sleepMode(sleepAmount) {
+    try {
+      let response = await fetch(`${baseURI}/sleepMode`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sleepAmount: sleepAmount,
+        }),
+      });
+      
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
