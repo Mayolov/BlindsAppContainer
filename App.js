@@ -1,21 +1,16 @@
 import React,{useRef, useState} from 'react';
-import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button} from 'react-native';
-
-//have phone look through different packets
-//Home IP
-// const baseURI = 'http://'+ '10.0.0.181'+':80';
-// 7leaves IP 
-// const baseURI = 'http://'+ '192.168.7.158'+':80';
-
-export default function App() {
-
-  const [baseURIPre,setBaseURI] = useState('');
-  const [openingTime,setOpeningTime] = useState('');
-  const [closingTime,setClosingTime] = useState('');
+import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button, Dimensions} from 'react-native';
+import {
+  useFonts,
+  Inter_900Black,
+  Inter_400Regular,
+  Inter_300Light,
+  Inter_600SemiBold,
+} from '@expo-google-fonts/inter';
+import Toggle from "react-native-toggle-element";
 
 
-  const baseURI = 'http://'+ baseURIPre +':80';
-
+  /*----connections to the blinds functionality----*/
   const handleIP = () => {
     Alert.alert(
       'Input',
@@ -129,106 +124,137 @@ export default function App() {
       console.error(error);
     }
   }
-  return (
-  <SafeAreaView style={[styles.container,containerStyle]}>
-    <View style = {styles.mainImage}>
-    <Image source={require("./app/assets/favicon.png")}></Image>
-    </View>
 
-    <View style = {styles.button}>
-      <TextInput
-          value={baseURIPre}
-          backgroundColor = {"white"}
-          onChangeText={text =>setBaseURI(text)}/>
-      <Button onPress={handleIP} title="Input IP" />
-    </View>
-    
-    <View style = {styles.button}>
-      <Button 
-        title='Press to open'
-        color={'darkgreen'}
-        onPress={()=> controlBlinds('openBlinds')}></Button>
-    </View>
+  /*-----front end stuff---*/
+  
+  const Splasher = () =>{
+  
+    return(
+      <View style={[styles.fullWidthAndHeight, styles.centerInside]}>
+                  <Text>Page is Loading</Text>
+                
+       </View>
+    )
+  }
+export default function App() {
 
-    <View style = {styles.button}>
-      <Button 
-        title='Press to Close'
-        color={'darkgreen'}
-        onPress={()=> controlBlinds('closeBlinds')}></Button>
-    </View>
+  const [baseURIPre,setBaseURI] = useState('http://10.0.181:80');
+  const [openingTime,setOpeningTime] = useState('');
+  const [closingTime,setClosingTime] = useState('');
+  const  [toggleValue,setToggleValue] = useState('closed')
+  let [fontsLoaded] = useFonts({
+    Inter_900Black,
+    Inter_400Regular,
+    Inter_300Light,
+    Inter_600SemiBold,
+  });
+  
+  if(!fontsLoaded){
+    return (
+      <Splasher />
+    )
 
-    <View style = {styles.button}>
-
-    <View style = {styles.button}>
-      <TextInput
-          value={closingTime}
-          backgroundColor = {"white"}
-          onChangeText={text =>setClosingTime(text)}/>
-      <Button onPress={handleClosingTime} title="Input close time HH:MM or H:M in 24-hour-time" />
-    </View>
-    </View>
-
-    <View style = {styles.button}>
-    
-    <View style = {styles.button}>
-      <TextInput
-          value={openingTime}
-          backgroundColor = {"white"}
-          onChangeText={text =>setOpeningTime(text)}/>
-      <Button onPress={handleOpenTime} title="Input open time HH:MM or H:M in 24-hour-time" />
+  }else {return (
+  <SafeAreaView style={[styles.container,eval(`${toggleValue}Styles`).primaryBackground, styles.flex1]}>
+    <View style={[styles.centerInside,{marginHorizontal: 30,}]}>
+      <Text style={[styles.primaryFont, eval(`${toggleValue}Styles`).primaryFont]}>
+       {`blinds ${toggleValue}`}
+      </Text>
+      <View style={[{marginVertical: 35}]}>
+        <Toggle
+          value={toggleValue === 'closed' ? false : true}
+          onPress={(val) => setToggleValue(toggleValue === 'closed' ? 'open' : 'closed')}
+          trackBar={{
+            activeBackgroundColor: lightSecondary,
+            inActiveBackgroundColor: darkSecondary,
+            width: 80,
+            height: 20,
+          }}
+          thumbButton={{
+            activeBackgroundColor: compOrange,
+            inActiveBackgroundColor: darkFont,
+            opacity: .7,
+            width: 40,
+            height: 40,
+          }}
+        />
       </View>
+     
     </View>
-    <Text  style={{color: 'red'}}>Ip is: {baseURIPre}</Text>
-    <Text style={{color: 'red'}}>Blinds open set to {openingTime}</Text>
-    <Text style={{color: 'red'}}>Blinds open set to {closingTime}</Text>
+    
+
+   
+    
+  
+  
 
 
   </SafeAreaView>
-  );
+  );}
 }
 
-const containerStyle = {backgroundColor: "black"}
+const darkPrimary = "#333940";
+const darkSecondary = "#43535b";
+const lightPrimary =  "#fafafa";
+const lightSecondary = "#c6d3d7";
+const darkFont = '#ecf5fb';
+const compOrange = "#f16102";
+const compBlue = "#91bdd5";
+const fullWidth = Dimensions.get('window').width;
+const fullHeight = Dimensions.get('window').height;
+
+const closedStyles = StyleSheet.create({
+    primaryBackground: {
+      backgroundColor: darkPrimary,
+      
+    },
+    secondaryBackground: {
+      backgroundColor: darkSecondary,
+    },
+    primaryFont:{
+      color: darkFont,
+    }
+  })
+const openStyles = StyleSheet.create({
+    primaryBackground: {
+      backgroundColor: lightPrimary,
+    },
+    secondaryBackground: {
+      backgroundColor: lightPrimary,
+    },
+    primaryFont:{
+      color: compOrange,
+    }
+  })
+
+
+
 
 const styles = StyleSheet.create({
+  fullWidthAndHeight:{
+    width: fullWidth,
+    height: fullHeight,
+  },
+  centerInside:{
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  flex1:{
+    flex: 1,
+  },
   container: {
     display: 'flex',    
     top: "0%",
-    paddingBottom: 200 ,
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "flex-end",
-    alignContent:"center"
+    justifyContent: "center",
+    alignContent:"center",
   },
-
-  button: {
-    borderWidth: 4,
-    borderColor: 'grey',
-  }, 
-
-  mainImage: {
-    position: 'absolute',
-    top: "30%",
-    left: "50%",
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    padding: 10,
-  },
-  buttonModal: {
-    alignSelf: 'center',
-  },
-  input: {
-    color: 'white'
-  },
-  baseText: {
-    fontWeight: 'bold'
-  },
-  innerText: {
-    color: 'white'
-  },
+  primaryFont:{
+    textAlign: 'center',
+    fontSize: 22,
+    fontFamily: 'Inter_600SemiBold',
+    letterSpacing: 1.3,
+  }
 
 });
 
