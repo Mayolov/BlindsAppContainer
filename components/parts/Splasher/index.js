@@ -3,9 +3,8 @@ import {View, StyleSheet, Text } from 'react-native';
 
 const Splasher = () =>{
     return(
-        <View >
+        <View>
                     <Text>Page is Loading</Text>
-                  
          </View>
       )
 }

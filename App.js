@@ -73,6 +73,8 @@ function TheTabs(){
          >
         {props => <Settings {...props} GlobalState={GlobalState}/>}
       </Tab.Screen>
+      
+        
      
 
       
@@ -95,12 +97,7 @@ const App = () => {
   <SafeAreaProvider>
     {
      !fontsLoaded ?
-       
-        <View>
           <Splasher />
-        </View>
-          
-        
      :
         <>
             <NavigationContainer>

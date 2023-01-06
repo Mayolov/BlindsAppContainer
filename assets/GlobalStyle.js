@@ -10,7 +10,10 @@ export const defaultConsts = {
     compBlue : "#91bdd5",
     fullWidth : Dimensions.get('window').width,
     fullHeight : Dimensions.get('window').height,
-
+    lightFont: 'Inter_300Light',
+    regularFont: 'Inter_400Regular',
+    semiBoldFont: 'Inter_600SemiBold',
+    blackFont: 'Inter_900Black'
 }
 
 
@@ -36,12 +39,12 @@ export const globalStyle = StyleSheet.create({
       primaryFont:{
         textAlign: 'center',
         fontSize: 22,
-        fontFamily: 'Inter_600SemiBold',
+        fontFamily: defaultConsts.semiBoldFont,
         letterSpacing: 1.3,
       },
       labelFont:{
         fontSize: 12,
-        fontFamily: 'Inter_400Regular',
+        fontFamily: defaultConsts.semiBoldFont,
         letterSpacing: 1.3,
       }
 })
