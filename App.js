@@ -14,15 +14,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Splasher } from './components/parts/Splasher';
 import { TabActions } from '@react-navigation/native';
 import Homer from './components/pages/Homer';
+import Scheduler from './components/pages/Scheduler';
+import Settings from './components/pages/Settings';
+import { defaultConsts } from './assets/GlobalStyle';
 
 
-function Set(){
-  return(
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  )
-}
+
 const Tab = createBottomTabNavigator();
 function TheTabs(){
   let [fontsLoaded] = useFonts({
@@ -33,16 +30,17 @@ function TheTabs(){
   });
   
   const [toggleValue, setToggleValue] = useState('open')
+  const [baseURI, setBaseURI] = useState('http://10.0.181:80');
   const GlobalState = {
-    toggleValue, setToggleValue
+    toggleValue, setToggleValue, baseURI, setBaseURI
   }
 
   return (
     <Tab.Navigator 
     screenOptions={({route}) => ({
       headerShown: false,
-      tabBarStyle: {borderTopWidth: 0,backgroundColor : toggleValue === "closed" ? darkPrimary : lightPrimary},
-      tabBarLabelStyle: {fontFamily: 'Inter_400Regular',fontSize: 12, color: toggleValue === "closed" ? darkFont : compOrange},
+      tabBarStyle: {borderTopWidth: 0,backgroundColor : toggleValue === "closed" ? defaultConsts.darkPrimary : defaultConsts.lightPrimary},
+      tabBarLabelStyle: {fontFamily: 'Inter_400Regular',fontSize: 12, color: toggleValue === "closed" ? defaultConsts.darkFont : defaultConsts.compOrange},
       tabBarIcon:({ color, size}) =>{
         let iconName;
 
@@ -53,7 +51,7 @@ function TheTabs(){
         }else{
           iconName = 'settings'
         }
-        return <Feather name={iconName} size={20} color={toggleValue === "closed"?  darkFont : compOrange} />
+        return <Feather name={iconName} size={20} color={toggleValue === "closed"?  defaultConsts.darkFont : defaultConsts.compOrange} />
       },
         
     })}>
@@ -67,13 +65,13 @@ function TheTabs(){
         name="schedule"
         options
          >
-        {props => <Homer {...props} GlobalState={GlobalState}/>}
+        {props => <Scheduler {...props} GlobalState={GlobalState}/>}
       </Tab.Screen>
       <Tab.Screen 
         name="settings"
         options
          >
-        {props => <Homer {...props} GlobalState={GlobalState}/>}
+        {props => <Settings {...props} GlobalState={GlobalState}/>}
       </Tab.Screen>
      
 
@@ -86,29 +84,33 @@ function TheTabs(){
 const App = () => {
 
 
-  // let [fontsLoaded] = useFonts({
-  //   Inter_900Black,
-  //   Inter_400Regular,
-  //   Inter_300Light,
-  //   Inter_600SemiBold,
-  // });
+  let [fontsLoaded] = useFonts({
+    Inter_900Black,
+    Inter_400Regular,
+    Inter_300Light,
+    Inter_600SemiBold,
+  });
 
+  return (
+  <SafeAreaProvider>
+    {
+     !fontsLoaded ?
+       
+        <View>
+          <Splasher />
+        </View>
+          
+        
+     :
+        <>
+            <NavigationContainer>
+              <TheTabs />
+          </NavigationContainer>
+        </>
+    }
+  </SafeAreaProvider>
+  )
   
-  // if(!fontsLoaded){
-  //   return (
-  //     <Splasher />
-  //   )
-
-  // }else {
-  //   return (
-    return(
-    <SafeAreaProvider>
-        <NavigationContainer>
-          <TheTabs />
-      </NavigationContainer>
-    </SafeAreaProvider>
-      
-    )
     
 
     
@@ -117,36 +119,3 @@ const App = () => {
 }
 
 export default App;
-
-const darkPrimary = "#333940";
-const darkSecondary = "#43535b";
-const lightPrimary =  "#fafafa";
-const lightSecondary = "#c6d3d7";
-const darkFont = '#ecf5fb';
-const compOrange = "#f16102";
-const compBlue = "#91bdd5";
-const fullWidth = Dimensions.get('window').width;
-const fullHeight = Dimensions.get('window').height;
-const closedStyles = StyleSheet.create({
-  primaryBackground: {
-    backgroundColor: darkPrimary,
-    
-  },
-  secondaryBackground: {
-    backgroundColor: darkSecondary,
-  },
-  primaryFont:{
-    color: darkFont,
-  }
-})
-const openStyles = StyleSheet.create({
-  primaryBackground: {
-    backgroundColor: lightPrimary,
-  },
-  secondaryBackground: {
-    backgroundColor: lightPrimary,
-  },
-  primaryFont:{
-    color: compOrange,
-  }
-})
