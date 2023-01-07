@@ -3,9 +3,9 @@ import {View, StyleSheet, Text } from 'react-native';
 
 const Splasher = () =>{
     return(
-        <View>
+        <SafeAreaView>
                     <Text>Page is Loading</Text>
-         </View>
+         </SafeAreaView>
       )
 }
 

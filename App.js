@@ -39,9 +39,10 @@ function TheTabs(){
     <Tab.Navigator 
     screenOptions={({route}) => ({
       headerShown: false,
+      tabBarShowLabel: false,
       tabBarStyle: {borderTopWidth: 0,backgroundColor : toggleValue === "closed" ? defaultConsts.darkPrimary : defaultConsts.lightPrimary},
-      tabBarLabelStyle: {fontFamily: 'Inter_400Regular',fontSize: 12, color: toggleValue === "closed" ? defaultConsts.darkFont : defaultConsts.compOrange},
-      tabBarIcon:({ color, size}) =>{
+      // tabBarLabelStyle: {fontFamily: 'Inter_400Regular',fontSize:  12 , color: toggleValue === "closed" ? defaultConsts.darkFont : defaultConsts.compOrange},
+      tabBarIcon:({ focused, color, size}) =>{
         let iconName;
 
         if (route.name === 'switch'){
@@ -51,7 +52,8 @@ function TheTabs(){
         }else{
           iconName = 'settings'
         }
-        return <Feather name={iconName} size={20} color={toggleValue === "closed"?  defaultConsts.darkFont : defaultConsts.compOrange} />
+        return <View style={[{opacity: focused ? .8 : .3}]}><Feather name={iconName} size={focused ? 28: 22} color={toggleValue === "closed"?  defaultConsts.darkFont : defaultConsts.compOrange} iconStyle={{backgroundColor: 'black'}}/></View>
+       
       },
         
     })}>

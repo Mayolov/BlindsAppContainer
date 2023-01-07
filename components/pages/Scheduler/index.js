@@ -1,8 +1,8 @@
 import React,{useRef, useState} from 'react';
-import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button, Dimensions} from 'react-native';
+import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Dimensions} from 'react-native';
 import useBlindsConnector from '../../../hooks/useBlindsConnector';
 import { openStyles, closedStyles, globalStyle, defaultConsts } from '../../../assets/GlobalStyle';
-
+import { Button, Card } from '@rneui/themed';
 
 
 
@@ -23,7 +23,11 @@ const closedStyle = closedStyles;
       </Text>
  
       
-   
+      <Card>
+        <Card.Title>test</Card.Title>
+        <Card.Divider></Card.Divider>
+     
+      </Card>
      
     </View>
     
