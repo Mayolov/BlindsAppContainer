@@ -85,8 +85,8 @@ const [choice, setChoice] = useState('closed')
               <View style={[globalStyle.tbComboField,eval(`${item.oc}Style`).primaryBackground,item.oc === 'closed' ? {borderWidth:1, borderColor:defaultConsts.mutedBlack, backgroundColor:defaultConsts.mutedBlack}: {borderWidth:1, borderColor:defaultConsts.mutedGray}]}>
                 <Text style={[ eval(`${item.oc}Style`).fieldlabel,{opacity: .8}]}>{status}</Text>
                 <Text style={[ eval(`${item.oc}Style`).fieldlabel,{opacity: .8}]}>{otherDateItem}</Text>
-                <TouchableOpacity style={[eval(`${item.oc}Local`).scheduleStick]}>
-                  <Feather name={'x'} size={17} color={item.oc === "closed" ? defaultConsts.compOrange : defaultConsts.lightPrimary}  />
+                <TouchableOpacity style={[eval(`${item.oc}Local`).scheduleX]}>
+                  <Feather name={'x'} size={12} color={item.oc === "closed" ? defaultConsts.compOrange : defaultConsts.lightPrimary}  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -142,9 +142,9 @@ const fakeData = [
 
 ]
 const openLocal = StyleSheet.create({
- scheduleStick:{
+ scheduleX:{
   backgroundColor: defaultConsts.compOrange,
-  padding: 4,
+  padding: 2,
   borderRadius:8,
  },
  scheduleForm:{
@@ -159,10 +159,10 @@ const openLocal = StyleSheet.create({
 })
 
 const closedLocal = StyleSheet.create({
-  scheduleStick:{
+  scheduleX:{
     backgroundColor: defaultConsts.lightPrimary,
-    padding: 4,
-    borderRadius:8,
+    padding: 2,
+    borderRadius:'50%',
   },
   scheduleForm:{
     backgroundColor: defaultConsts.darkPrimary,
