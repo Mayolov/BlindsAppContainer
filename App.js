@@ -52,7 +52,7 @@ function TheTabs(){
         }else{
           iconName = 'settings'
         }
-        return <View style={[{opacity: focused ? .8 : .3}]}><Feather name={iconName} size={focused ? 28: 22} color={toggleValue === "closed"?  defaultConsts.darkFont : defaultConsts.compOrange} iconStyle={{backgroundColor: 'black'}}/></View>
+        return <View style={[{opacity: focused ? .8 : .3}]}><Feather name={iconName} size={focused ? 28: 22} color={toggleValue === "closed"?  defaultConsts.darkFont : defaultConsts.compOrange} /></View>
        
       },
         

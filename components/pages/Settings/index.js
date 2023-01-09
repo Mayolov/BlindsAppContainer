@@ -21,31 +21,31 @@ const closedStyle = closedStyles;
     return (
   <SafeAreaView style={[globalStyle.container,eval(`${toggleValue}Style`).primaryBackground, globalStyle.flex1]}>
     <View style={[globalStyle.centerInside,{marginHorizontal: 30,}]}>
-      <Text style={[localStyle.subPageHeader, globalStyle.primaryFont, eval(`${toggleValue}Style`).primaryFont]}>
+      <Text style={[globalStyle.subPageHeader, globalStyle.primaryFont, eval(`${toggleValue}Style`).primaryFont]}>
        settings
       </Text>
-      <View style={[ localStyle.settingsItemContainer]}> 
-        <Text style={[localStyle.fieldlabel, globalStyle.labelFont, eval(`local${toggleValue}`).fieldlabel]}>Current IP:</Text>
-        <View style={[localStyle.tbComboField, localStyle.fieldShadow]}>
+      <View style={[ globalStyle.settingsItemContainer]}> 
+        <Text style={[globalStyle.fieldlabel, globalStyle.labelFont, eval(`${toggleValue}Style`).fieldlabel]}>Current IP:</Text>
+        <View style={[globalStyle.tbComboField, globalStyle.fieldShadow]}>
           <TextInput 
-            style={[localStyle.tbTextInput]}
+            style={[globalStyle.tbTextInput]}
             placeholder={baseURI}
             value={tempURI}
             onChangeText={setTempURI}
             />
-          <TouchableOpacity style={[localStyle.tbButton, eval(`local${toggleValue}`).tbButton]}>
-            <Text style={[localStyle.tbButtonText]}>
+          <TouchableOpacity style={[globalStyle.tbButton, eval(`${toggleValue}Style`).tbButton]}>
+            <Text style={[globalStyle.tbButtonTextFont]}>
                   save
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={[ localStyle.settingsItemContainer]}> 
-        <Text style={[localStyle.fieldlabel, globalStyle.labelFont,eval(`local${toggleValue}`).fieldlabel]}>Sleep Mode:</Text>
+      <View style={[ globalStyle.settingsItemContainer]}> 
+        <Text style={[globalStyle.fieldlabel, globalStyle.labelFont,eval(`${toggleValue}Style`).fieldlabel]}>Sleep Mode:</Text>
         
           <Button
-            buttonStyle={[localStyle.fullButton, localStyle.fieldShadow, eval(`local${toggleValue}`).fullButton]}
-           titleStyle= {[localStyle.fullButtonTitle]}
+            buttonStyle={[globalStyle.fullButton, globalStyle.fieldShadow, eval(`${toggleValue}Style`).fullButton]}
+           titleStyle= {[globalStyle.fullButtonTitleFont]}
             linearGradientProps={null}
             onPress={() => {sleepMode ? setSleepMode(false) : setSleepMode(true)}}
             title={`turn ${sleepMode ? "off": "on" }`}
@@ -62,106 +62,4 @@ const closedStyle = closedStyles;
 }
 
 export default Settings;
-const localclosed = StyleSheet.create({
-  tbButton:{
-    backgroundColor: defaultConsts.darkPrimary,
-    opacity: .7
-  },
-  fullButton:{
-    borderColor: defaultConsts.lightPrimary,
-    backgroundColor: defaultConsts.darkPrimary,
-    opacity: .7,
-  },
-  fieldlabel:{
-    color: defaultConsts.lightPrimary,
-  },
 
-})
-const localopen = StyleSheet.create({
-  tbButton:{
-    backgroundColor: defaultConsts.compOrange,
-
-  },
-  fullButton:{
-    borderColor: defaultConsts.lightPrimary,
-    backgroundColor: defaultConsts.compOrange,
-  },
-  fieldlabel:{
-    color: defaultConsts.darkPrimary,
-    opacity: .4
-  },
-})
-const localStyle = StyleSheet.create({
-    backgroundFiller:{
-      backgroundColor: 'pink',
-    },
-    subPageHeader:{
-      marginBottom:5,
-    },
-    settingsItemContainer:{
-      width: '100%',
-      marginTop: 25,
-      
-    },
-    fieldlabel:{
-      fontSize: 14,
-      marginBottom: 15,
-      color: defaultConsts.lightPrimary,
-      marginLeft: 2,
-    },
-    tbComboField:{
-      backgroundColor: '#ffffff',
-      width: '100%',
-      height: 45,
-      paddingHorizontal: 10,
-      alignItems: 'center',
-      flexDirection: 'row',
-      borderRadius: 5,
-      justifyContent: 'space-between'
-    },
-    tbComboBtnwrap:{
-      paddingHorizontal: 0,
-    },
-    tbTextInput:{
-      width: '80%',
-      fontFamily: defaultConsts.regularFont,
-      color: defaultConsts.darkPrimary,
-      opacity: .8
-    },
-    tbButton:{
-      width: '20%',
-      padding: 5,
-      borderRadius: 3,
-      
-    },
-    tbButtonText:{
-      textAlign: 'center',
-      color: defaultConsts.lightPrimary,
-      fontFamily: defaultConsts.semiBoldFont,
-      fontSize: 13
-    },
-    fullButton:{
-      width: '100%',
-      height: 42,
-      margin: 0,
-      alignItems: 'center',
-      borderRadius: 5,
-      borderWidth: 1,
-      
-    },
-    fullButtonTitle:{
-      fontSize: 14,
-      fontFamily: defaultConsts.semiBoldFont,
-    }, 
-    fieldShadow:{
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.18,
-      shadowRadius: 1.00,
-      elevation: 1,
-    }
-
-})

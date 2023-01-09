@@ -8,6 +8,8 @@ export const defaultConsts = {
     darkFont : '#ecf5fb',
     compOrange : "#f16102",
     compBlue : "#91bdd5",
+    mutedBlack: "#6a7177",
+    mutedGray: '#f2f2f2',
     fullWidth : Dimensions.get('window').width,
     fullHeight : Dimensions.get('window').height,
     lightFont: 'Inter_300Light',
@@ -46,7 +48,77 @@ export const globalStyle = StyleSheet.create({
         fontSize: 12,
         fontFamily: defaultConsts.semiBoldFont,
         letterSpacing: 1.3,
-      }
+      },
+      fullButtonTitleFont:{
+        fontSize: 14,
+        fontFamily: defaultConsts.semiBoldFont,
+      }, 
+      /*---subpage styles----*/
+    subPageHeader:{
+      marginBottom:22,
+    },
+    /*----form styles---*/
+    settingsItemContainer:{
+      width: '100%',
+      marginBottom: 25,
+    },
+    fieldlabel:{
+      fontSize: 14,
+      marginBottom: 15,
+      color: defaultConsts.lightPrimary,
+      marginLeft: 2,
+    },
+    tbComboField:{
+      backgroundColor: '#ffffff',
+      width: '100%',
+      height: 45,
+      paddingHorizontal: 10,
+      alignItems: 'center',
+      flexDirection: 'row',
+      borderRadius: 5,
+      justifyContent: 'space-between'
+    },
+    tbComboBtnwrap:{
+      paddingHorizontal: 0,
+    },
+    tbTextInput:{
+      width: '80%',
+      fontFamily: defaultConsts.regularFont,
+      color: defaultConsts.darkPrimary,
+      opacity: .8
+    },
+    tbButton:{
+      width: '20%',
+      padding: 5,
+      borderRadius: 3,
+      
+    },
+    tbButtonTextFont:{
+      textAlign: 'center',
+      color: defaultConsts.lightPrimary,
+      fontFamily: defaultConsts.semiBoldFont,
+      fontSize: 13
+    },
+    fullButton:{
+      width: '100%',
+      height: 42,
+      margin: 0,
+      alignItems: 'center',
+      borderRadius: 5,
+      borderWidth: 1,
+      
+    },
+   
+    fieldShadow:{
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.18,
+      shadowRadius: 1.00,
+      elevation: 1,
+    }
 })
 
 export const openStyles = StyleSheet.create({
@@ -58,7 +130,19 @@ export const openStyles = StyleSheet.create({
     },
     primaryFont:{
       color: defaultConsts.compOrange,
-    }
+    },
+    tbButton:{
+      backgroundColor: defaultConsts.compOrange,
+  
+    },
+    fullButton:{
+      borderColor: defaultConsts.lightPrimary,
+      backgroundColor: defaultConsts.compOrange,
+    },
+    fieldlabel:{
+      color: defaultConsts.darkPrimary,
+      opacity: .4
+    },
   })
 
   export const closedStyles = StyleSheet.create({
@@ -71,5 +155,17 @@ export const openStyles = StyleSheet.create({
     },
     primaryFont:{
       color: defaultConsts.darkFont,
-    }
+    },
+    tbButton:{
+      backgroundColor: defaultConsts.darkPrimary,
+      opacity: .7
+    },
+    fullButton:{
+      borderColor: defaultConsts.lightPrimary,
+      backgroundColor: defaultConsts.darkPrimary,
+      opacity: .7,
+    },
+    fieldlabel:{
+      color: defaultConsts.lightPrimary,
+    },
   })
