@@ -3,8 +3,10 @@ import {StyleSheet ,TextInput, Text, Alert, View, Image,TouchableOpacity, SafeAr
 import useBlindsConnector from '../../../hooks/useBlindsConnector';
 import { openStyles, closedStyles, globalStyle, defaultConsts } from '../../../assets/GlobalStyle';
 import { Button, Card } from '@rneui/base';
+import { convertDate} from '../../../hooks/dateFormatter'
 import Toggle from "react-native-toggle-element";
 import { MaterialIcons, Feather } from '@expo/vector-icons';
+import DateTimePickerModal from "react-native-modal-datetime-picker"
 
 
 
@@ -12,10 +14,47 @@ import { MaterialIcons, Feather } from '@expo/vector-icons';
 const Schedule = ({GlobalState}) =>{
 
 const {toggleValue, setToggleValue, baseURI, setBaseURI} = GlobalState;
-
+const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+const [isTimePickerVisible, setTimePickerVisible] = useState(false);
 const openStyle = openStyles;
 const closedStyle = closedStyles;
 const [choice, setChoice] = useState('closed')
+const [date, setDate] = useState(null)
+const [timeStamp, setTimeStamp] = useState(null)
+
+const showDatePicker = () => {
+  setDatePickerVisible(true);
+  console.log('why u not working')
+};
+
+const hideDatePicker = () => {
+  setDatePickerVisible(false);
+  console.log('dead in the water')
+};
+const showTimePicker = () =>{
+  console.log('time picker working???')
+  setTimePickerVisible(true);
+}
+const hideTimePicker = () =>{
+  setTimePickerVisible(false);
+}
+
+const handleDay = (d) => {
+  console.warn("A date has been picked: ", d);
+  const timeStamper = d.getTime()
+  console.log(timeStamper)
+  setTimeStamp(timeStamper)
+  setDate(d)
+  hideDatePicker()
+};
+const handleTime = (t) => {
+  console.warn("A time has been picked: ", t);
+  const timeStamper = t.getTime()
+  console.log(timeStamper)
+  setTimeStamp(timeStamper)
+  setDate(t)
+  hideTimePicker();
+};
 
   // const [handleOpenTime, handleClosingTime, handleIP, controlBlinds, closeTime, openTime, sleepMode] = useBlindsConnector();
 
@@ -47,9 +86,31 @@ const [choice, setChoice] = useState('closed')
           }}
         />
             </View>
-            <TouchableOpacity >
-              <Text style={[ eval(`${choice}Style`).fieldlabel,{opacity: .8, textDecorationLine:"underline"}]}>choose date & time</Text>
+            <View style={[{flexDirection: 'row'}]}>
+            <TouchableOpacity onPress={()=>{showDatePicker()}}>
+              <Text style={[ eval(`${choice}Style`).fieldlabel,{opacity: .8, textDecorationLine:"underline"}]}>{timeStamp ? convertDate(timeStamp, "date") : "choose date"}</Text>
           </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleDay}
+            onCancel={hideDatePicker}
+            date={date ? date : new Date()}
+          />
+          <Text style={[ eval(`${choice}Style`).fieldlabel,{paddingHorizontal: 0}]}>{!date ? "  &  " : "  @  " }</Text>
+          <TouchableOpacity onPress={()=>{showTimePicker()}}>
+              <Text style={[ eval(`${choice}Style`).fieldlabel,{opacity: .8, textDecorationLine:"underline"}]}>{timeStamp ? convertDate(timeStamp, "time") : "time"}</Text>
+          </TouchableOpacity>
+          
+           <DateTimePickerModal
+            isVisible={isTimePickerVisible}
+            mode="time"
+            onConfirm={handleTime}
+            onCancel={hideTimePicker}
+            date={date ? date : new Date()}
+          />
+            </View>
+           
            
             <TouchableOpacity style={[globalStyle.tbButton, eval(`${choice}Local`).saveScheduleButton]}>
             <Text style={[localStyle.saveScheduleButtonTextFont, eval(`${choice}Local`).saveScheduleButtonText]}>
@@ -80,11 +141,12 @@ const [choice, setChoice] = useState('closed')
           const fullDateItem = localTime.toLocaleDateString("en-US", options)
           const otherDateItem = utcDate.toLocaleDateString("en-US", options)
           const status = item.oc === "closed" ? "close" :"open";
+          
           return (
             <View style={[globalStyle.settingsItemContainer,{marginBottom:15}]}>
               <View style={[globalStyle.tbComboField,eval(`${item.oc}Style`).primaryBackground,item.oc === 'closed' ? {borderWidth:1, borderColor:defaultConsts.mutedBlack, backgroundColor:defaultConsts.mutedBlack}: {borderWidth:1, borderColor:defaultConsts.mutedGray}]}>
                 <Text style={[ eval(`${item.oc}Style`).fieldlabel,{opacity: .8}]}>{status}</Text>
-                <Text style={[ eval(`${item.oc}Style`).fieldlabel,{opacity: .8}]}>{otherDateItem}</Text>
+                <Text style={[ eval(`${item.oc}Style`).fieldlabel,{opacity: .8}]}>{convertDate(item.time , "datetime")}</Text>
                 <TouchableOpacity style={[eval(`${item.oc}Local`).scheduleX]}>
                   <Feather name={'x'} size={12} color={item.oc === "closed" ? defaultConsts.compOrange : defaultConsts.lightPrimary}  />
                 </TouchableOpacity>
@@ -95,7 +157,7 @@ const [choice, setChoice] = useState('closed')
         })
       }
       </View> 
-    
+      
   </SafeAreaView>
     ) 
 }
