@@ -118,7 +118,15 @@ export const globalStyle = StyleSheet.create({
       shadowOpacity: 0.18,
       shadowRadius: 1.00,
       elevation: 1,
-    }
+    },
+    tbButtonSchedule:{
+      height: 75,
+    },
+    saveScheduleButtonTextFont:{
+      textAlign: 'center',
+      fontFamily: defaultConsts.semiBoldFont,
+      fontSize: 13
+    },
 })
 
 export const openStyles = StyleSheet.create({
@@ -143,6 +151,20 @@ export const openStyles = StyleSheet.create({
       color: defaultConsts.darkPrimary,
       opacity: .4
     },
+    scheduleX:{
+      backgroundColor: defaultConsts.compOrange,
+      padding: 2,
+      borderRadius:8,
+     },
+     scheduleForm:{
+      
+     },
+     saveScheduleButton:{
+      backgroundColor: defaultConsts.compOrange,
+     },
+     saveScheduleButtonText:{
+      color: defaultConsts.lightPrimary,
+     }
   })
 
   export const closedStyles = StyleSheet.create({
@@ -168,4 +190,21 @@ export const openStyles = StyleSheet.create({
     fieldlabel:{
       color: defaultConsts.lightPrimary,
     },
+    scheduleX:{
+      backgroundColor: defaultConsts.lightPrimary,
+      padding: 2,
+      borderRadius:'50%',
+    },
+    scheduleForm:{
+      backgroundColor: defaultConsts.darkPrimary,
+      borderColor: defaultConsts.lightPrimary,
+      borderWidth: 1,
+    },
+    saveScheduleButton:{
+      backgroundColor: defaultConsts.lightPrimary,
+     },
+    saveScheduleButtonText:{
+      color : defaultConsts.compOrange,
+      opacity: .8
+    }
   })

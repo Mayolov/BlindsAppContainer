@@ -12,9 +12,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Splasher } from './components/parts/Splasher';
-import { TabActions } from '@react-navigation/native';
 import Homer from './components/pages/Homer';
-import Scheduler from './components/pages/Scheduler';
+import Schedule from './components/pages/Schedule';
 import Settings from './components/pages/Settings';
 import { defaultConsts } from './assets/GlobalStyle';
 
@@ -67,7 +66,7 @@ function TheTabs(){
         name="schedule"
         options
          >
-        {props => <Scheduler {...props} GlobalState={GlobalState}/>}
+        {props => <Schedule {...props} GlobalState={GlobalState}/>}
       </Tab.Screen>
       <Tab.Screen 
         name="settings"
@@ -75,12 +74,6 @@ function TheTabs(){
          >
         {props => <Settings {...props} GlobalState={GlobalState}/>}
       </Tab.Screen>
-      
-        
-     
-
-      
-          
       </Tab.Navigator>
   )
 }
