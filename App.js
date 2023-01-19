@@ -1,4 +1,4 @@
-import React,{useRef, useState} from 'react';
+import React,{useRef, useState, useEffect} from 'react';
 import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button, Dimensions} from 'react-native';
 import {
   useFonts,
@@ -11,31 +11,28 @@ import { MaterialIcons, Feather } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Splasher } from './components/parts/Splasher';
+import Splasher  from './components/parts/Splasher';
 import Homer from './components/pages/Homer';
 import Schedule from './components/pages/Schedule';
 import Settings from './components/pages/Settings';
 import { defaultConsts } from './assets/GlobalStyle';
-
+import useToggleSwitch from './hooks/useToggleSwitch';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useIpAddress from './hooks/useIpAddress';
 
 
 const Tab = createBottomTabNavigator();
-function TheTabs(){
-  let [fontsLoaded] = useFonts({
-    Inter_900Black,
-    Inter_400Regular,
-    Inter_300Light,
-    Inter_600SemiBold,
-  });
+
+function TheTabs({GlobalState}){
+ 
+  const {toggleValue, setToggleValue, baseURI, setBaseURI} = GlobalState;
   
-  const [toggleValue, setToggleValue] = useState('open')
-  const [baseURI, setBaseURI] = useState('http://10.0.181:80');
-  const GlobalState = {
-    toggleValue, setToggleValue, baseURI, setBaseURI
-  }
+
+
 
   return (
-    <Tab.Navigator 
+  
+      <Tab.Navigator 
     screenOptions={({route}) => ({
       headerShown: false,
       tabBarShowLabel: false,
@@ -75,6 +72,8 @@ function TheTabs(){
         {props => <Settings {...props} GlobalState={GlobalState}/>}
       </Tab.Screen>
       </Tab.Navigator>
+ 
+    
   )
 }
 
@@ -87,19 +86,25 @@ const App = () => {
     Inter_300Light,
     Inter_600SemiBold,
   });
+  const {baseURI, setBaseURI, locUI, saveIp} = useIpAddress();
+  const {toggleValue, setToggleValue, checkSavedToggle, saveToggle}= useToggleSwitch(null)
+  
+
+  const GlobalState = {
+    saveIp, toggleValue, setToggleValue, baseURI, setBaseURI, saveToggle, checkSavedToggle, locUI
+  }
 
   return (
   <SafeAreaProvider>
     {
-     !fontsLoaded ?
+     !fontsLoaded || !toggleValue ?
           <Splasher />
      :
-        <>
             <NavigationContainer>
-              <TheTabs />
+              <TheTabs GlobalState={GlobalState}/>
           </NavigationContainer>
-        </>
     }
+  
   </SafeAreaProvider>
   )
   

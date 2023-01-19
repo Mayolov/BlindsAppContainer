@@ -16,47 +16,10 @@ import ScheduleForm from '../../parts/ScheduleForm';
 const Schedule = ({GlobalState}) =>{
 
 const {toggleValue, setToggleValue, baseURI, setBaseURI} = GlobalState;
-const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-const [isTimePickerVisible, setTimePickerVisible] = useState(false);
+
 const openStyle = openStyles;
 const closedStyle = closedStyles;
-const [choice, setChoice] = useState('closed')
-const [date, setDate] = useState(null)
-const [timeStamp, setTimeStamp] = useState(null)
 
-const showDatePicker = () => {
-  setDatePickerVisible(true);
-  console.log('why u not working')
-};
-
-const hideDatePicker = () => {
-  setDatePickerVisible(false);
-  console.log('dead in the water')
-};
-const showTimePicker = () =>{
-  console.log('time picker working???')
-  setTimePickerVisible(true);
-}
-const hideTimePicker = () =>{
-  setTimePickerVisible(false);
-}
-
-const handleDay = (d) => {
-  console.warn("A date has been picked: ", d);
-  const timeStamper = d.getTime()
-  console.log(timeStamper)
-  setTimeStamp(timeStamper)
-  setDate(d)
-  hideDatePicker()
-};
-const handleTime = (t) => {
-  console.warn("A time has been picked: ", t);
-  const timeStamper = t.getTime()
-  console.log(timeStamper)
-  setTimeStamp(timeStamper)
-  setDate(t)
-  hideTimePicker();
-};
 
   // const [handleOpenTime, handleClosingTime, handleIP, controlBlinds, closeTime, openTime, sleepMode] = useBlindsConnector();
 

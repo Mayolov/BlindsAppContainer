@@ -10,11 +10,12 @@ import { openStyles, closedStyles, globalStyle, defaultConsts } from '../../../a
 
 const Homer = ({GlobalState}) =>{
 
-const {toggleValue, setToggleValue, baseURI} = GlobalState;
+const {toggleValue, setToggleValue, baseURI, saveToggle} = GlobalState;
 
 
 const openStyle = openStyles;
 const closedStyle = closedStyles;
+
   
   // const [handleOpenTime, handleClosingTime, handleIP, controlBlinds, closeTime, openTime, sleepMode] = useBlindsConnector();
 
@@ -27,7 +28,7 @@ const closedStyle = closedStyles;
       <View style={[{marginVertical: 35}]}>
         <Toggle
           value={toggleValue === 'closed' ? false : true}
-          onPress={(val) => setToggleValue(toggleValue === 'closed' ? 'open' : 'closed')}
+          onPress={(val) => saveToggle(toggleValue === 'closed' ? 'open' : 'closed')}
           trackBar={{
             activeBackgroundColor: defaultConsts.lightSecondary,
             inActiveBackgroundColor: defaultConsts.darkSecondary,

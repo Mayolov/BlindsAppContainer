@@ -10,8 +10,8 @@ import { Button } from '@rneui/themed';
 
 const Settings = ({GlobalState}) =>{
 
-const {toggleValue, setToggleValue, baseURI, setBaseURI} = GlobalState;
-const [tempURI, setTempURI] = useState(null)
+const {toggleValue, setToggleValue, baseURI, setBaseURI, locUI, saveIp} = GlobalState;
+const [tempURI, setTempURI] = useState(baseURI)
 const [sleepMode, setSleepMode] = useState(false)
 const openStyle = openStyles;
 const closedStyle = closedStyles;
@@ -29,11 +29,11 @@ const closedStyle = closedStyles;
         <View style={[globalStyle.tbComboField, globalStyle.fieldShadow]}>
           <TextInput 
             style={[globalStyle.tbTextInput]}
-            placeholder={baseURI}
+            placeholder={locUI+' (current network)'}
             value={tempURI}
             onChangeText={setTempURI}
             />
-          <TouchableOpacity style={[globalStyle.tbButton, eval(`${toggleValue}Style`).tbButton]}>
+          <TouchableOpacity onPress={()=>saveIp(tempURI)} style={[globalStyle.tbButton, eval(`${toggleValue}Style`).tbButton]}>
             <Text style={[globalStyle.tbButtonTextFont]}>
                   save
             </Text>
