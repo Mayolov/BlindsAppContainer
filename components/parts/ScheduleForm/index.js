@@ -1,12 +1,12 @@
 import React,{useRef, useState} from 'react';
 import {StyleSheet ,TextInput, Text, Alert, View, Image,TouchableOpacity, SafeAreaView, Dimensions, FlatList} from 'react-native';
-import useBlindsConnector from '../../../hooks/useBlindsConnector';
+
 import { openStyles, closedStyles, globalStyle, defaultConsts } from '../../../assets/GlobalStyle';
 import { convertDate} from '../../../hooks/dateFormatter'
 import Toggle from "react-native-toggle-element";
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-const ScheduleForm = ({GlobalState}) =>{
-    const {toggleValue, setToggleValue, baseURI, setBaseURI} = GlobalState;
+const ScheduleForm = ({scheduleList, saveSchedule}) =>{
+    
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [isTimePickerVisible, setTimePickerVisible] = useState(false);
     const openStyle = openStyles;
@@ -33,17 +33,17 @@ const ScheduleForm = ({GlobalState}) =>{
       }
       
       const handleDay = (d) => {
-        console.warn("A date has been picked: ", d);
+        console.log("A date has been picked: ", d);
         const timeStamper = d.getTime()
-        console.log(timeStamper)
+        console.log('time stamper is : ',timeStamper)
         setTimeStamp(timeStamper)
         setDate(d)
         hideDatePicker()
       };
       const handleTime = (t) => {
-        console.warn("A time has been picked: ", t);
+        console.log("A time has been picked: ", t);
         const timeStamper = t.getTime()
-        console.log(timeStamper)
+        console.log('date stamper is : ',timeStamper)
         setTimeStamp(timeStamper)
         setDate(t)
         hideTimePicker();
@@ -54,27 +54,27 @@ const ScheduleForm = ({GlobalState}) =>{
         <View style={[globalStyle.tbComboField, globalStyle.fieldShadow, eval(`${choice}Style`).scheduleForm]}>
             <View style={[{ justifyContent: 'center'}]}>
             <Toggle
-          value={choice === 'closed' ? false : true}
-          onPress={(val) => setChoice(choice === 'closed' ? 'open' : 'closed')}
-          trackBar={{
-            activeBackgroundColor: defaultConsts.lightSecondary,
-            inActiveBackgroundColor: defaultConsts.darkSecondary,
-            width: 40,
-            height: 10,
-          }}
-          thumbButton={{
-            activeBackgroundColor: defaultConsts.compOrange,
-            inActiveBackgroundColor: defaultConsts.darkFont,
-            opacity: .7,
-            width: 20,
-            height: 20,
-          }}
-        />
+                value={choice === 'closed' ? false : true}
+                onPress={(val) => setChoice(choice === 'closed' ? 'open' : 'closed')}
+                trackBar={{
+                    activeBackgroundColor: defaultConsts.lightSecondary,
+                    inActiveBackgroundColor: defaultConsts.darkSecondary,
+                    width: 40,
+                    height: 10,
+                }}
+                thumbButton={{
+                    activeBackgroundColor: defaultConsts.compOrange,
+                    inActiveBackgroundColor: defaultConsts.darkFont,
+                    opacity: .7,
+                    width: 20,
+                    height: 20,
+                }}
+                />
             </View>
             <View style={[{flexDirection: 'row'}]}>
-            <TouchableOpacity onPress={()=>{showDatePicker()}}>
-              <Text style={[ eval(`${choice}Style`).fieldlabel,{opacity: .8, textDecorationLine:"underline"}]}>{timeStamp ? convertDate(timeStamp, "date") : "choose date"}</Text>
-          </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{showDatePicker()}}>
+                    <Text style={[ eval(`${choice}Style`).fieldlabel,{opacity: .8, textDecorationLine:"underline"}]}>{timeStamp ? convertDate(timeStamp, "date") : "choose date"}</Text>
+                </TouchableOpacity>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="date"
@@ -95,7 +95,7 @@ const ScheduleForm = ({GlobalState}) =>{
             date={date ? date : new Date()}
           />
             </View>
-            <TouchableOpacity style={[globalStyle.tbButton, eval(`${choice}Style`).saveScheduleButton]}>
+            <TouchableOpacity onPress={()=>saveSchedule(timeStamp, choice, scheduleList)} style={[globalStyle.tbButton, eval(`${choice}Style`).saveScheduleButton]}>
             <Text style={[globalStyle.saveScheduleButtonTextFont, eval(`${choice}Style`).saveScheduleButtonText]}>
                   save
             </Text>

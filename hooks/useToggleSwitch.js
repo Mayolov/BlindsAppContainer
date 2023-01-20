@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -25,7 +25,7 @@ export default function useToggleSwitch (initialValue){
     const [toggleValue, setToggleValue] = useState(null)
 
     /******simulates checking status ****/
-    async function checkSavedToggle(){
+    const checkSavedToggle = useCallback(async ()=>{
         try{
             const st = await AsyncStorage.getItem('@CurrentToggle')
         const savedToggle = st
@@ -35,9 +35,9 @@ export default function useToggleSwitch (initialValue){
     }
         
         
-    }
+    },[])
     /******simulates saving out ****/
-    async function saveToggle(v){
+    const saveToggle = useCallback(async(v)=>{
         try{
             const saved = await AsyncStorage.setItem('@CurrentToggle', v)
             setToggleValue(v)
@@ -45,7 +45,7 @@ export default function useToggleSwitch (initialValue){
         }catch(err){
             console.log('error on save toggle')
         }
-    }
+    },[])
 
     useEffect(()=>{
           checkSavedToggle()

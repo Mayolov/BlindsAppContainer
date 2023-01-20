@@ -29,6 +29,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
+    "react-native-get-random-values": "~1.8.0",
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-native-network-info": "^5.2.1",
     "react-native-public-ip": "^1.0.2",
@@ -36,7 +37,8 @@
     "react-native-screens": "^3.18.2",
     "react-native-toggle-element": "^2.0.1",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.18.9"
+    "react-native-web": "~0.18.9",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

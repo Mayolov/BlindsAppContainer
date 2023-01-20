@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
@@ -17,7 +17,7 @@ const useIpAddress = () =>{
        checkIp()
     },[])
 
-    async function saveIp(s){
+    const saveIp = useCallback(async(s)=>{
         try{
             if(ipRegex({exact: true}).test(s)){
                 const savedIp = await AsyncStorage.setItem('@SavedIp', s)
@@ -34,7 +34,7 @@ const useIpAddress = () =>{
         }catch(err){
             console.log('was not able to save ip', err)
         }
-    }
+    },[])
     
     return { baseURI, setBaseURI, locUI, saveIp}
 }
