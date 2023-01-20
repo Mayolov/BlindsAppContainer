@@ -1,19 +1,3 @@
-
-import React,{useRef, useState} from 'react';
-import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button} from 'react-native';
-
-// have phone look through different packets
-// Home IP
-// const baseURI = 'http://'+ '10.0.0.181'+':80';
-// 7leaves IP 
-// const baseURI = 'http://'+ '192.168.7.158'+':80';
-
-export default function App() {
-
-  const [baseURIPre,setBaseURI] = useState('');
-  const [openingTime,setOpeningTime] = useState('');
-  const [closingTime,setClosingTime] = useState('');
-
 import React,{useRef, useState, useEffect} from 'react';
 import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button, Dimensions} from 'react-native';
 import {
