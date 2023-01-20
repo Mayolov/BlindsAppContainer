@@ -1,3 +1,4 @@
+
 import React,{useRef, useState} from 'react';
 import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button} from 'react-native';
 
@@ -13,222 +14,121 @@ export default function App() {
   const [openingTime,setOpeningTime] = useState('');
   const [closingTime,setClosingTime] = useState('');
 
+import React,{useRef, useState, useEffect} from 'react';
+import {StyleSheet ,TextInput, Text, Alert, View, Image, SafeAreaView, Button, Dimensions} from 'react-native';
+import {
+  useFonts,
+  Inter_900Black,
+  Inter_400Regular,
+  Inter_300Light,
+  Inter_600SemiBold,
+} from '@expo-google-fonts/inter';
+import { MaterialIcons, Feather } from '@expo/vector-icons';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Splasher  from './components/parts/Splasher';
+import Homer from './components/pages/Homer';
+import Schedule from './components/pages/Schedule';
+import Settings from './components/pages/Settings';
+import { defaultConsts } from './assets/GlobalStyle';
+import useToggleSwitch from './hooks/useToggleSwitch';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useIpAddress from './hooks/useIpAddress';
 
-  const baseURI = 'http://'+ baseURIPre +':80';
 
-  const handleIP = () => {
-    Alert.alert(
-      'Input',
-      baseURIPre,
-      [
-        {
-          text: 'OK',
-          onPress: () => console.log('OK Pressed')
-        }
-      ],
-      { cancelable: false }
-    );
-  };
+const Tab = createBottomTabNavigator();
 
-  const handleOpenTime = () => {
-    Alert.alert(
-      'Input',
-      openingTime,
-      [
-        {
-          text: 'OK',
-          onPress: () => openTime(openingTime)
-        }
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const handleClosingTime = () => {
-    Alert.alert(
-      'Input',
-      closingTime,
-      [
-        {
-          text: 'OK',
-          onPress: () => closeTime(closingTime)
-        }
-      ],
-      { cancelable: false }
-    );
-  };
-
-  async function controlBlinds(command) {
-    try {
-      let response = await fetch(`${baseURI}/controlBlinds`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          command: command,
-        }),
-      });
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+function TheTabs({GlobalState}){
+ 
+  const {toggleValue, setToggleValue, baseURI, setBaseURI} = GlobalState;
   
-  async function closeTime(blindsShutTime) {
-    try {
-      let response = await fetch(`${baseURI}/closeTime`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          blindsShutTime: blindsShutTime,
-        }),
-      });
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  
-  async function openTime(blindsOpenTime) {
-    try {
-      let response = await fetch(`${baseURI}/openTime`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          blindsOpenTime: blindsOpenTime,
-        }),
-      });
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  async function sleepMode(sleepAmount) {
-    try {
-      let response = await fetch(`${baseURI}/sleepMode`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          sleepAmount: sleepAmount,
-        }),
-      });
-      
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
+
+
   return (
-  <SafeAreaView style={[styles.container,containerStyle]}>
-    <View style = {styles.mainImage}>
-    <Image source={require("./app/assets/favicon.png")}></Image>
-    </View>
+  
+      <Tab.Navigator 
+    screenOptions={({route}) => ({
+      headerShown: false,
+      tabBarShowLabel: false,
+      tabBarStyle: {borderTopWidth: 0,backgroundColor : toggleValue === "closed" ? defaultConsts.darkPrimary : defaultConsts.lightPrimary},
+      // tabBarLabelStyle: {fontFamily: 'Inter_400Regular',fontSize:  12 , color: toggleValue === "closed" ? defaultConsts.darkFont : defaultConsts.compOrange},
+      tabBarIcon:({ focused, color, size}) =>{
+        let iconName;
 
-    <View style = {styles.button}>
-      <TextInput
-          value={baseURIPre}
-          backgroundColor = {"white"}
-          onChangeText={text =>setBaseURI(text)}/>
-      <Button onPress={handleIP} title="Input IP" />
-    </View>
+        if (route.name === 'switch'){
+          iconName = 'toggle-left'
+        }else if(route.name === 'schedule'){
+          iconName = 'calendar'
+        }else{
+          iconName = 'settings'
+        }
+        return <View style={[{opacity: focused ? .8 : .3}]}><Feather name={iconName} size={focused ? 28: 22} color={toggleValue === "closed"?  defaultConsts.darkFont : defaultConsts.compOrange} /></View>
+       
+      },
+        
+    })}>
+      <Tab.Screen 
+        name="switch"
+        options
+         >
+        {props => <Homer {...props} GlobalState={GlobalState}/>}
+      </Tab.Screen>
+      <Tab.Screen 
+        name="schedule"
+        options
+         >
+        {props => <Schedule {...props} GlobalState={GlobalState}/>}
+      </Tab.Screen>
+      <Tab.Screen 
+        name="settings"
+        options
+         >
+        {props => <Settings {...props} GlobalState={GlobalState}/>}
+      </Tab.Screen>
+      </Tab.Navigator>
+ 
     
-    <View style = {styles.button}>
-      <Button 
-        title='Press to open'
-        color={'darkgreen'}
-        onPress={()=> controlBlinds('openBlinds')}></Button>
-    </View>
-
-    <View style = {styles.button}>
-      <Button 
-        title='Press to Close'
-        color={'darkgreen'}
-        onPress={()=> controlBlinds('closeBlinds')}></Button>
-    </View>
-
-    <View style = {styles.button}>
-
-    <View style = {styles.button}>
-      <TextInput
-          value={closingTime}
-          backgroundColor = {"white"}
-          onChangeText={text =>setClosingTime(text)}/>
-      <Button onPress={handleClosingTime} title="Input close time HH:MM or H:M in 24-hour-time" />
-    </View>
-    </View>
-
-    <View style = {styles.button}>
-    
-    <View style = {styles.button}>
-      <TextInput
-          value={openingTime}
-          backgroundColor = {"white"}
-          onChangeText={text =>setOpeningTime(text)}/>
-      <Button onPress={handleOpenTime} title="Input open time HH:MM or H:M in 24-hour-time" />
-      </View>
-    </View>
-    <Text  style={{color: 'red'}}>Ip is: {baseURIPre}</Text>
-    <Text style={{color: 'red'}}>Blinds open set to {openingTime}</Text>
-    <Text style={{color: 'red'}}>Blinds open set to {closingTime}</Text>
-
-
-  </SafeAreaView>
-  );
+  )
 }
 
-const containerStyle = {backgroundColor: "black"}
+const App = () => {
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',    
-    top: "0%",
-    paddingBottom: 200 ,
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: "flex-end",
-    alignContent:"center"
-  },
 
-  button: {
-    borderWidth: 4,
-    borderColor: 'grey',
-  }, 
+  let [fontsLoaded] = useFonts({
+    Inter_900Black,
+    Inter_400Regular,
+    Inter_300Light,
+    Inter_600SemiBold,
+  });
+  const {baseURI, setBaseURI, locUI, saveIp} = useIpAddress();
+  const {toggleValue, setToggleValue, checkSavedToggle, saveToggle}= useToggleSwitch(null)
+  
 
-  mainImage: {
-    position: 'absolute',
-    top: "30%",
-    left: "50%",
-  },
-  input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    padding: 10,
-  },
-  buttonModal: {
-    alignSelf: 'center',
-  },
-  input: {
-    color: 'white'
-  },
-  baseText: {
-    fontWeight: 'bold'
-  },
-  innerText: {
-    color: 'white'
-  },
+  const GlobalState = {
+    saveIp, toggleValue, setToggleValue, baseURI, setBaseURI, saveToggle, checkSavedToggle, locUI
+  }
 
-});
+  return (
+  <SafeAreaProvider>
+    {
+     !fontsLoaded || !toggleValue ?
+          <Splasher />
+     :
+            <NavigationContainer>
+              <TheTabs GlobalState={GlobalState}/>
+          </NavigationContainer>
+    }
+  
+  </SafeAreaProvider>
+  )
+  
+    
 
+    
+
+
+}
+
+export default App;
