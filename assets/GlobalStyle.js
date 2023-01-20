@@ -149,7 +149,7 @@ export const openStyles = StyleSheet.create({
     },
     fieldlabel:{
       color: defaultConsts.darkPrimary,
-      opacity: .4
+      opacity: .75
     },
     scheduleX:{
       backgroundColor: defaultConsts.compOrange,
